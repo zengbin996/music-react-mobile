@@ -29,7 +29,10 @@ export default function Discover() {
   }, []);
   const ball = ballList.map((item, index) => (
     <div key={item.id} className="flex-none w-1/5 flex flex-col justify-around items-center">
-      <div className="w-12 h-12 ico-img bg-red-500 flex justify-center items-center" style={{ mask: `url('${item.iconUrl}')`, maskSize: 'cover' }}>
+      <div
+        className="w-12 h-12 ico-img bg-red-500 flex justify-center items-center"
+        style={{ mask: `url('${item.iconUrl}')`, WebkitMask: `url('${item.iconUrl}')`, maskSize: 'cover', WebkitMaskSize: 'cover' }}
+      >
         <div className="text-white translate-y-0.5 text-sm">{index == 0 ? new Date().getDate() : ''}</div>
       </div>
       <div>{item.name}</div>
