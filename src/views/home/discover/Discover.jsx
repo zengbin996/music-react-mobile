@@ -85,7 +85,7 @@ export default function Discover() {
         </Swiper>
       </div>
 
-      <div className="px-4 py-2 text-lg">专属歌单</div>
+      {/* <div className="px-4 py-2 text-lg">专属歌单</div> */}
     </>
   );
 }
