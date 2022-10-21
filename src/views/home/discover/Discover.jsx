@@ -39,13 +39,13 @@ export default function Discover() {
     </div>
   ));
 
+  // 新歌推荐
   const [newSong, setNewSong] = useState([]);
   useEffect(() => {
     axios.get('/personalized/newsong?limit=9').then((res) => {
       setNewSong(_.chunk(res.result, 3));
     });
   }, []);
-
   const newSongItem = newSong.map((item, index) => {
     return (
       <Swiper.Item key={index}>
@@ -63,6 +63,63 @@ export default function Discover() {
           );
         })}
       </Swiper.Item>
+    );
+  });
+
+  //精品歌单
+  const [highQuality, setHighQuality] = useState([]);
+  useEffect(() => {
+    axios.get('/top/playlist/highquality?limit=20').then((res) => {
+      setHighQuality(_.chunk(res.playlists, 2));
+    });
+  }, []);
+
+  const highQualityDom = highQuality.map((item, index) => {
+    return (
+      <div key={index} className="w-24 flex-none">
+        {item.map((itemInner) => {
+          return (
+            <div key={itemInner.id} className="w-24 flex-none mb-2">
+              <img src={itemInner.coverImgUrl} alt={itemInner.name} className="rounded-md" />
+              <div className="line-clamp-2">{itemInner.name}</div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  });
+
+  //热门歌手
+  const [artists, setArtists] = useState([]);
+  useEffect(() => {
+    axios.get('/top/artists?limit=10').then((res) => {
+      setArtists(res.artists);
+    });
+  }, []);
+
+  const artistsDom = artists.map((item) => {
+    return (
+      <div key={item.id} className="w-24 flex-none">
+        <img src={item.picUrl} alt={item.name} className="rounded-md object-cover w-24 h-24" />
+        <div className="line-clamp-1 leading-8">{item.name}</div>
+      </div>
+    );
+  });
+
+  //最新MV
+  const [musicVideo, setMusicVideo] = useState([]);
+  useEffect(() => {
+    axios.get('/mv/first?limit=10').then((res) => {
+      setMusicVideo(res.data);
+    });
+  }, []);
+
+  const musicVideoDom = musicVideo.map((item) => {
+    return (
+      <div key={item.id} className="w-24 flex-none">
+        <img src={item.cover} alt={item.name} className="rounded-md object-cover w-24 h-24" />
+        <div className="line-clamp-1 leading-8">{item.name}</div>
+      </div>
     );
   });
 
@@ -85,7 +142,14 @@ export default function Discover() {
         </Swiper>
       </div>
 
-      {/* <div className="px-4 py-2 text-lg">专属歌单</div> */}
+      <div className="px-4 py-2 pt-4 text-lg">专属歌单</div>
+      <div className="px-4 flex gap-2 text-sm overflow-auto">{highQualityDom}</div>
+
+      <div className="px-4 py-2 pt-4 text-lg">热门歌手</div>
+      <div className="px-4 flex gap-2 text-sm overflow-auto">{artistsDom}</div>
+
+      <div className="px-4 py-2 pt-4 text-lg">最新MV</div>
+      <div className="px-4 flex gap-2 text-sm overflow-auto">{musicVideoDom}</div>
     </>
   );
 }

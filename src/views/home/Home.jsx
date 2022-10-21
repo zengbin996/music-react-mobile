@@ -54,7 +54,7 @@ export default function Home() {
       </div>
 
       <div>
-        <div className="h-12 border"></div>
+        {/* <div className="h-12 border"></div> */}
         <TabBar className="h-12" onChange={(item) => changeTabBar(item)} activeKey={activeKey}>
           {tabs.map((item) => (
             <TabBar.Item key={item.key} icon={item.icon} title={item.title} />
