@@ -15,7 +15,7 @@ export default function Discover() {
   const items = banner.map((item) => (
     <Swiper.Item key={item.pic}>
       <div onClick={() => {}}>
-        <img src={item.pic} />
+        <img src={item.pic + '?imageView=1&type=webp&thumbnail=750x0'} />
       </div>
     </Swiper.Item>
   ));
@@ -31,7 +31,7 @@ export default function Discover() {
     <div key={item.id} className="flex-none w-1/5 flex flex-col justify-around items-center">
       <div
         className="w-12 h-12 ico-img bg-red-500 flex justify-center items-center"
-        style={{ mask: `url('${item.iconUrl}')`, WebkitMask: `url('${item.iconUrl}')`, maskSize: 'cover', WebkitMaskSize: 'cover' }}
+        style={{ mask: `url('${item.iconUrl}')`, WebkitMask: `url('${item.iconUrl}?imageView=1&type=webp&thumbnail=96x0')`, maskSize: 'cover', WebkitMaskSize: 'cover' }}
       >
         <div className="text-white translate-y-0.5 text-sm">{index == 0 ? new Date().getDate() : ''}</div>
       </div>
@@ -52,7 +52,7 @@ export default function Discover() {
         {item.map((item) => {
           return (
             <div className="h-16 flex gap-2 items-center mt-2 pl-4" key={item.id}>
-              <img src={item.picUrl} alt={item.name} className="h-full rounded-md" />
+              <img src={item.picUrl + '?imageView=1&type=webp&thumbnail=128x0'} alt={item.name} className="h-full rounded-md" />
               <div>
                 <div className="pb-1">{item.name}</div>
                 <div className="text-sm text-gray-700">
@@ -80,7 +80,7 @@ export default function Discover() {
         {item.map((itemInner) => {
           return (
             <div key={itemInner.id} className="w-24 flex-none mb-2">
-              <img src={itemInner.coverImgUrl} alt={itemInner.name} className="rounded-md" />
+              <img src={itemInner.coverImgUrl + '?imageView=1&type=webp&thumbnail=182x0'} alt={itemInner.name} className="rounded-md" />
               <div className="line-clamp-2">{itemInner.name}</div>
             </div>
           );
@@ -100,7 +100,7 @@ export default function Discover() {
   const artistsDom = artists.map((item) => {
     return (
       <div key={item.id} className="w-24 flex-none">
-        <img src={item.picUrl} alt={item.name} className="rounded-md object-cover w-24 h-24" />
+        <img src={item.picUrl + '?imageView=1&type=webp&thumbnail=182x0'} alt={item.name} className="rounded-md object-cover w-24 h-24" />
         <div className="line-clamp-1 leading-8">{item.name}</div>
       </div>
     );
@@ -117,7 +117,7 @@ export default function Discover() {
   const musicVideoDom = musicVideo.map((item) => {
     return (
       <div key={item.id} className="w-24 flex-none">
-        <img src={item.cover} alt={item.name} className="rounded-md object-cover w-24 h-24" />
+        <img src={item.cover + '?imageView=1&type=webp&thumbnail=182x0'} alt={item.name} className="rounded-md object-cover w-24 h-24" />
         <div className="line-clamp-1 leading-8">{item.name}</div>
       </div>
     );
