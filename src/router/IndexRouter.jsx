@@ -8,7 +8,7 @@ export default function IndexRouter() {
     <HashRouter>
       <Routes>
         <Route path="/*" element={<Home />} />
-        <Route path="/play" element={<Play />} />
+        <Route path="/play/:id" element={<Play />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </HashRouter>

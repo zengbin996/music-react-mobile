@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { Swiper } from 'antd-mobile';
 import axios from 'axios';
 import _ from 'lodash';
 import './discover.css';
 
 export default function Discover() {
+  const navigate = new useNavigate();
+
   // 轮播图
   const [banner, setBanner] = useState([]);
   useEffect(() => {
@@ -14,9 +18,9 @@ export default function Discover() {
   }, []);
   const items = banner.map((item) => (
     <Swiper.Item key={item.pic}>
-      <div onClick={() => {}}>
+      <a href={item.url} className="block">
         <img src={item.pic + '?imageView=1&type=webp&thumbnail=750x0'} />
-      </div>
+      </a>
     </Swiper.Item>
   ));
 
@@ -27,8 +31,11 @@ export default function Discover() {
       setBallList(res.data);
     });
   }, []);
+  const ballHandle = (item) => {
+    console.log(item);
+  };
   const ball = ballList.map((item, index) => (
-    <div key={item.id} className="flex-none w-1/5 flex flex-col justify-around items-center">
+    <div key={item.id} className="flex-none w-1/5 flex flex-col justify-around items-center" onClick={() => ballHandle(item.name)}>
       <div
         className="w-12 h-12 ico-img bg-red-500 flex justify-center items-center"
         style={{ mask: `url('${item.iconUrl}')`, WebkitMask: `url('${item.iconUrl}?imageView=1&type=webp&thumbnail=96x0')`, maskSize: 'cover', WebkitMaskSize: 'cover' }}
@@ -46,12 +53,15 @@ export default function Discover() {
       setNewSong(_.chunk(res.result, 3));
     });
   }, []);
+  const playMusic = ({ id }) => {
+    navigate('/play/' + id);
+  };
   const newSongItem = newSong.map((item, index) => {
     return (
       <Swiper.Item key={index}>
         {item.map((item) => {
           return (
-            <div className="h-16 flex gap-2 items-center mt-2 pl-4" key={item.id}>
+            <div className="h-16 flex gap-2 items-center mt-2 pl-4" key={item.id} onClick={() => playMusic(item)}>
               <img src={item.picUrl + '?imageView=1&type=webp&thumbnail=128x0'} alt={item.name} className="h-full rounded-md" />
               <div>
                 <div className="pb-1">{item.name}</div>
@@ -132,7 +142,7 @@ export default function Discover() {
   return (
     <>
       <div className="px-4 py-2 text-xl">推荐</div>
-      <div className="mx-4 rounded-md border overflow-hidden">{isShow(<Swiper defaultIndex={1}>{items}</Swiper>, banner.length)}</div>
+      <div className="mx-4 rounded-md overflow-hidden">{isShow(<Swiper defaultIndex={1}>{items}</Swiper>, banner.length)}</div>
       <div className="overflow-auto flex gap-x-2 py-4 px-4">{ball}</div>
 
       <div className="px-4 py-2 text-lg">新歌推荐</div>
