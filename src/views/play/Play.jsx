@@ -1,22 +1,18 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { start } from './playSlice';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
-export default function Play() {
+export default function Counter() {
   const { id } = new useParams();
+  const dispatch = useDispatch();
 
-  const audioRef = useRef();
-  const [audioSrc, setAudioSrc] = useState();
   useEffect(() => {
     axios.get('/song/url', { params: { id } }).then((res) => {
-      setAudioSrc(res.data[0].url);
-      audioRef.current.play();
+      dispatch(start(res.data[0].url));
     });
   }, [id]);
 
-  return (
-    <div>
-      <audio src={audioSrc} controls ref={audioRef}></audio>
-    </div>
-  );
+  return <div>999</div>;
 }

@@ -1,7 +1,13 @@
 import React from 'react';
 import './App.css';
-import IndexRouter from './router/IndexRouter';
+import store from './redux/store';
+import { Provider } from 'react-redux';
+import Audio from './Audio';
 
 export default function App() {
-  return <IndexRouter />;
+  return (
+    <Provider store={store}>
+      <Audio />
+    </Provider>
+  );
 }

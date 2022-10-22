@@ -142,14 +142,16 @@ export default function Discover() {
   return (
     <>
       <div className="px-4 py-2 text-xl">推荐</div>
-      <div className="mx-4 rounded-md overflow-hidden">{isShow(<Swiper defaultIndex={1}>{items}</Swiper>, banner.length)}</div>
+      <div className="mx-4 rounded-md overflow-hidden">{banner.length > 0 && <Swiper defaultIndex={1}>{items}</Swiper>}</div>
       <div className="overflow-auto flex gap-x-2 py-4 px-4">{ball}</div>
 
       <div className="px-4 py-2 text-lg">新歌推荐</div>
       <div>
-        <Swiper defaultIndex={0} stuckAtBoundary={false} slideSize={90} indicator={() => null}>
-          {newSongItem}
-        </Swiper>
+        {newSong.length > 0 && (
+          <Swiper defaultIndex={0} stuckAtBoundary={false} slideSize={90} indicator={() => null}>
+            {newSongItem}
+          </Swiper>
+        )}
       </div>
 
       <div className="px-4 py-2 pt-4 text-lg">专属歌单</div>
