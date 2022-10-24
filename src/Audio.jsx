@@ -7,7 +7,7 @@ export default function Audio() {
   const musicSrc = useSelector((state) => state.play.src);
 
   const durationChange = (e) => {
-    console.log(e.target.currentTime);
+    // console.log(e.target.currentTime);
   };
 
   return (

@@ -16,9 +16,11 @@ export const playSlice = createSlice({
     start: (state, action) => {
       state.src = action.payload
     },
+    setDetail: (state, action) => {
+      state.detail = action.payload
+    }
   }
 })
 
-export const { start } = playSlice.actions
-
+export const { start, setDetail } = playSlice.actions
 export default playSlice.reducer

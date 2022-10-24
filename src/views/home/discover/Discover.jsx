@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { Swiper } from 'antd-mobile';
 import axios from 'axios';
 import _ from 'lodash';
-import './discover.css';
 
 export default function Discover() {
   const navigate = new useNavigate();
@@ -53,8 +51,8 @@ export default function Discover() {
       setNewSong(_.chunk(res.result, 3));
     });
   }, []);
-  const playMusic = ({ id }) => {
-    navigate('/play/' + id);
+  const playMusic = (item) => {
+    navigate('/play/' + item.id);
   };
   const newSongItem = newSong.map((item, index) => {
     return (
@@ -132,12 +130,6 @@ export default function Discover() {
       </div>
     );
   });
-
-  //是否显示组件
-  const isShow = (Comp, isTrue) => {
-    if (isTrue) return Comp;
-    return null;
-  };
 
   return (
     <>

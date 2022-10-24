@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@icon-park/react": "^1.4.2",
     "@reduxjs/toolkit": "^1.8.6",
     "antd-mobile": "^5.24.0",
     "axios": "^1.1.3",
