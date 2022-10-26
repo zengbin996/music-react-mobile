@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { start, setDetail } from './playSlice';
+import { start, setDetail, switchState } from './playSlice';
 import axios from 'axios';
 import { NavBar, ProgressBar } from 'antd-mobile';
 import { DownOutline, HeartFill, HeartOutline } from 'antd-mobile-icons';
@@ -11,7 +11,10 @@ export default function Counter() {
   const navigate = useNavigate();
   const { id } = new useParams();
   const dispatch = useDispatch();
+
   const musicDetail = useSelector((state) => state.play.detail);
+  const state = useSelector((state) => state.play.state);
+  const playPattern = useSelector((state) => state.play.playPattern);
 
   useEffect(() => {
     axios.get('/song/url', { params: { id } }).then((res) => {
@@ -95,16 +98,19 @@ export default function Counter() {
               </div>
 
               <div className="flex justify-between items-center">
-                <PlayCycle theme="outline" size="22" fill="#F2F2F2" className="cursor-pointer" />
+                {playPattern === 0 && <PlayCycle theme="outline" size="22" fill="#F2F2F2" className="cursor-pointer" />}
+                {playPattern === 1 && <ShuffleOne theme="outline" size="26" fill="#F2F2F2" className="cursor-pointer" />}
+                {playPattern === 2 && <PlayOnce theme="outline" size="26" fill="#F2F2F2" className="cursor-pointer" />}
 
                 <GoStart theme="outline" size="36" fill="#F2F2F2" className="cursor-pointer" />
-                <Play theme="outline" size="48" fill="#F2F2F2" className="cursor-pointer" />
-                {/* <PauseOne theme="outline" size="26" fill="#F2F2F2" className="cursor-pointer"  /> */}
+                {state ? (
+                  <PauseOne theme="outline" size="56" fill="#F2F2F2" className="cursor-pointer" onClick={() => dispatch(switchState(!state))} />
+                ) : (
+                  <Play theme="outline" size="56" fill="#F2F2F2" className="cursor-pointer" onClick={() => dispatch(switchState(!state))} />
+                )}
                 <GoEnd theme="outline" size="36" fill="#F2F2F2" className="cursor-pointer" />
 
                 <MusicList theme="outline" size="22" fill="#F2F2F2" className="cursor-pointer" />
-                {/* <PlayOnce theme="outline" size="26" fill="#F2F2F2" className="cursor-pointer"  />
-            <ShuffleOne theme="outline" size="26" fill="#F2F2F2"  className="cursor-pointer" /> */}
               </div>
             </div>
           </div>
