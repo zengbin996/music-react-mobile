@@ -104,9 +104,9 @@ export default function Counter() {
 
                 <GoStart theme="outline" size="36" fill="#F2F2F2" className="cursor-pointer" />
                 {state ? (
-                  <PauseOne theme="outline" size="56" fill="#F2F2F2" className="cursor-pointer" onClick={() => dispatch(switchState(!state))} />
+                  <PauseOne theme="outline" size="56" fill="#F2F2F2" className="cursor-pointer" onClick={() => window.audioDom.pause()} />
                 ) : (
-                  <Play theme="outline" size="56" fill="#F2F2F2" className="cursor-pointer" onClick={() => dispatch(switchState(!state))} />
+                  <Play theme="outline" size="56" fill="#F2F2F2" className="cursor-pointer" onClick={() => window.audioDom.play()} />
                 )}
                 <GoEnd theme="outline" size="36" fill="#F2F2F2" className="cursor-pointer" />
 
