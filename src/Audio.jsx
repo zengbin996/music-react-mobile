@@ -2,22 +2,22 @@ import React, { useRef, useEffect } from 'react';
 import IndexRouter from './router/IndexRouter';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
-import { switchState } from './views/play/playSlice';
+import { setMusicState, setMusicCurrentTime } from './views/play/playSlice';
 
 export default function Audio() {
   const dispatch = useDispatch();
-  const musicSrc = useSelector((state) => state.play.src);
-  const state = useSelector((state) => state.play.state);
+  const musicSrc = useSelector((state) => state.play.musicSrc);
+  const state = useSelector((state) => state.play.musicState);
 
   const durationChange = (e) => {
-    // console.log(e.target.currentTime);
+    dispatch(setMusicCurrentTime(e.target.currentTime * 1000));
   };
 
   const playHandle = () => {
-    dispatch(switchState(true));
+    dispatch(setMusicState(true));
   };
   const pauseHandle = () => {
-    dispatch(switchState(false));
+    dispatch(setMusicState(false));
   };
 
   useEffect(() => {

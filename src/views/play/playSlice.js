@@ -1,30 +1,46 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { Toast } from 'antd-mobile';
+
+const patternList = ['顺序播放', '随机播放', '单曲循环'];
 
 export const playSlice = createSlice({
   name: 'music',
   initialState: {
-    state: false, //当前状态
-    src: '', //播放地址
-    list: [], //音乐列表
-    currentIndex: 0, //当前播放下标
-    duration: 0, //总时长
-    currentTime: 0, //当前播放进度
-    playPattern: 0, //播放模式 0顺序播放 1随机播放 2单曲循环
-    lyric: 0, //歌词
-    detail: {}, //音乐详情数据
+    musicState: false, //当前状态
+    musicSrc: '', //播放地址
+    musicList: [], //音乐列表
+    musicCurrentIndex: 0, //当前播放下标
+    musicCuration: 0, //总时长
+    musicCurrentTime: 0, //当前播放进度
+    musicPlayPattern: 0, //播放模式 0顺序播放 1随机播放 2单曲循环
+    musicLyric: 0, //歌词
+    musicDetail: {}, //音乐详情数据
   },
   reducers: {
-    start: (state, action) => {
-      state.src = action.payload;
+    setSrc: (state, action) => {
+      state.musicSrc = action.payload;
     },
     setDetail: (state, action) => {
-      state.detail = action.payload;
+      state.musicDetail = action.payload;
     },
-    switchState: (state, action) => {
-      state.state = action.payload;
+    setMusicState: (state, action) => {
+      state.musicState = action.payload;
+    },
+    setMusicCurrentTime: (state, action) => {
+      state.musicCurrentTime = action.payload;
+    },
+
+    setPattern: (state) => {
+      if (state.musicPlayPattern === 2) {
+        state.musicPlayPattern = 0;
+      } else {
+        state.musicPlayPattern = state.musicPlayPattern + 1;
+      }
+
+      Toast.show(patternList[state.musicPlayPattern]);
     },
   },
 });
 
-export const { start, setDetail, switchState } = playSlice.actions;
+export const { setSrc, setDetail, setMusicState, setMusicCurrentTime, setPattern } = playSlice.actions;
 export default playSlice.reducer;

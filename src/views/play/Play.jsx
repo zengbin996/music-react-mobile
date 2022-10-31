@@ -1,24 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { start, setDetail, switchState } from './playSlice';
+import { setSrc, setDetail, setMusicState, setPattern } from './playSlice';
 import axios from 'axios';
 import { NavBar, ProgressBar } from 'antd-mobile';
 import { DownOutline, HeartFill, HeartOutline } from 'antd-mobile-icons';
 import { PlayCycle, PlayOnce, ShuffleOne, GoStart, Play, PauseOne, GoEnd, MusicList } from '@icon-park/react';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+dayjs.extend(duration);
 
 export default function Counter() {
   const navigate = useNavigate();
   const { id } = new useParams();
   const dispatch = useDispatch();
 
-  const musicDetail = useSelector((state) => state.play.detail);
-  const state = useSelector((state) => state.play.state);
-  const playPattern = useSelector((state) => state.play.playPattern);
+  const { musicDetail, musicState, musicPlayPattern, musicCurrentTime } = useSelector((state) => state.play);
 
   useEffect(() => {
     axios.get('/song/url', { params: { id } }).then((res) => {
-      dispatch(start(res.data[0].url));
+      dispatch(setSrc(res.data[0].url));
     });
 
     axios.get('/song/detail', { params: { ids: id } }).then((res) => {
@@ -92,18 +93,18 @@ export default function Counter() {
                   }}
                 />
                 <div className="flex justify-between mt-2">
-                  <span>00:00</span>
-                  <span>{musicDetail.dt}</span>
+                  <span>{dayjs.duration(musicCurrentTime).format('mm:ss')}</span>
+                  <span>{dayjs.duration(musicDetail.dt).format('mm:ss')}</span>
                 </div>
               </div>
 
               <div className="flex justify-between items-center">
-                {playPattern === 0 && <PlayCycle theme="outline" size="22" fill="#F2F2F2" className="cursor-pointer" />}
-                {playPattern === 1 && <ShuffleOne theme="outline" size="26" fill="#F2F2F2" className="cursor-pointer" />}
-                {playPattern === 2 && <PlayOnce theme="outline" size="26" fill="#F2F2F2" className="cursor-pointer" />}
+                {musicPlayPattern === 0 && <PlayCycle onClick={() => dispatch(setPattern())} theme="outline" size="26" fill="#F2F2F2" className="cursor-pointer" />}
+                {musicPlayPattern === 1 && <ShuffleOne onClick={() => dispatch(setPattern())} theme="outline" size="26" fill="#F2F2F2" className="cursor-pointer" />}
+                {musicPlayPattern === 2 && <PlayOnce onClick={() => dispatch(setPattern())} theme="outline" size="26" fill="#F2F2F2" className="cursor-pointer" />}
 
                 <GoStart theme="outline" size="36" fill="#F2F2F2" className="cursor-pointer" />
-                {state ? (
+                {musicState ? (
                   <PauseOne theme="outline" size="56" fill="#F2F2F2" className="cursor-pointer" onClick={() => window.audioDom.pause()} />
                 ) : (
                   <Play theme="outline" size="56" fill="#F2F2F2" className="cursor-pointer" onClick={() => window.audioDom.play()} />
