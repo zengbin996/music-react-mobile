@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import IndexRouter from './router/IndexRouter';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
-import { setMusicState, setMusicCurrentTime } from './views/play/playSlice';
+import { setMusicState, setMusicCurrentTime } from './redux/playMusic';
 
 export default function Audio() {
   const dispatch = useDispatch();

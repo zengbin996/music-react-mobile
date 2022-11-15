@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSrc, setDetail, setMusicState, setPattern } from './playSlice';
+import { setSrc, setDetail, setMusicState, setPattern } from '../../redux/playMusic';
+import { setBBar } from '../../redux/tabBar';
 import axios from 'axios';
 import { NavBar, ProgressBar } from 'antd-mobile';
 import { DownOutline, HeartFill, HeartOutline } from 'antd-mobile-icons';
@@ -16,6 +17,14 @@ export default function Counter() {
   const dispatch = useDispatch();
 
   const { musicDetail, musicState, musicPlayPattern, musicCurrentTime } = useSelector((state) => state.play);
+
+  //隐藏tabBar
+  useEffect(() => {
+    dispatch(setBBar(false));
+    return () => {
+      dispatch(setBBar(true));
+    };
+  }, []);
 
   useEffect(() => {
     axios.get('/song/url', { params: { id } }).then((res) => {

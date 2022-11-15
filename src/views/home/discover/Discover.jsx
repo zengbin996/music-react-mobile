@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Swiper } from 'antd-mobile';
+import { Swiper, Input } from 'antd-mobile';
+import { Search } from '@icon-park/react';
 import axios from 'axios';
 import _ from 'lodash';
 
@@ -131,12 +132,19 @@ export default function Discover() {
     );
   });
 
+  //搜索
+  const searchHandle = () => {
+    navigate('/search');
+  };
   return (
     <>
       <div className="px-4 py-2 text-xl">推荐</div>
+      <div className="mx-4 mb-2 border rounded-full flex items-center pl-2 gap-1" onClick={searchHandle}>
+        <Search theme="outline" size="16" fill="#999" />
+        <Input placeholder="请输入内容搜索" value="" />
+      </div>
       <div className="mx-4 rounded-md overflow-hidden">{banner.length > 0 && <Swiper defaultIndex={1}>{items}</Swiper>}</div>
       <div className="overflow-auto flex gap-x-2 py-4 px-4">{ball}</div>
-
       <div className="px-4 py-2 text-lg">新歌推荐</div>
       <div>
         {newSong.length > 0 && (
@@ -145,13 +153,10 @@ export default function Discover() {
           </Swiper>
         )}
       </div>
-
       <div className="px-4 py-2 pt-4 text-lg">专属歌单</div>
       <div className="px-4 flex gap-2 text-sm overflow-auto">{highQualityDom}</div>
-
       <div className="px-4 py-2 pt-4 text-lg">热门歌手</div>
       <div className="px-4 flex gap-2 text-sm overflow-auto">{artistsDom}</div>
-
       <div className="px-4 py-2 pt-4 text-lg">最新MV</div>
       <div className="px-4 flex gap-2 text-sm overflow-auto">{musicVideoDom}</div>
     </>
