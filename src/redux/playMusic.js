@@ -1,6 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { Toast } from 'antd-mobile';
-const patternList = ['顺序播放', '随机播放', '单曲循环'];
+import { createSlice } from '@reduxjs/toolkit'
+import { Toast } from 'antd-mobile'
+const patternList = ['顺序播放', '随机播放', '单曲循环']
 
 export const playSlice = createSlice({
   name: 'music',
@@ -17,29 +17,34 @@ export const playSlice = createSlice({
   },
   reducers: {
     setSrc: (state, action) => {
-      state.musicSrc = action.payload;
+      state.musicSrc = action.payload
     },
     setDetail: (state, action) => {
-      state.musicDetail = action.payload;
+      state.musicDetail = action.payload
     },
     setMusicState: (state, action) => {
-      state.musicState = action.payload;
+      state.musicState = action.payload
     },
     setMusicCurrentTime: (state, action) => {
-      state.musicCurrentTime = action.payload;
+      state.musicCurrentTime = action.payload
     },
 
+    //播放模式
     setPattern: (state) => {
       if (state.musicPlayPattern === 2) {
-        state.musicPlayPattern = 0;
+        state.musicPlayPattern = 0
       } else {
-        state.musicPlayPattern = state.musicPlayPattern + 1;
+        state.musicPlayPattern = state.musicPlayPattern + 1
       }
 
-      Toast.show(patternList[state.musicPlayPattern]);
+      Toast.show(patternList[state.musicPlayPattern])
+    },
+
+    addOneMusic: (state, action) => {
+      state.musicList.push({ ...action.payload })
     },
   },
-});
+})
 
-export const { setSrc, setDetail, setMusicState, setMusicCurrentTime, setPattern } = playSlice.actions;
-export default playSlice.reducer;
+export const { setSrc, setDetail, setMusicState, setMusicCurrentTime, setPattern, addOneMusic } = playSlice.actions
+export default playSlice.reducer
