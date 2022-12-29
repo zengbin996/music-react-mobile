@@ -1,19 +1,17 @@
-import React, { useState, useEffect } from 'react'
-import { Input, List, NavBar } from 'antd-mobile'
+import React, { useState, useEffect, useRef } from 'react'
+import { Input, List, Tag } from 'antd-mobile'
 import { useDispatch, useSelector } from 'react-redux'
 import { Search } from '@icon-park/react'
 import axios from 'axios'
 import { setBBar } from '../../../redux/tabBar'
-import { useNavigate } from 'react-router-dom'
-import { addOneMusic } from '../../../redux/playMusic'
+import { useNavigate, useNavigationType } from 'react-router-dom'
+import { SpinLoading } from 'antd-mobile'
+import { VipOne } from '@icon-park/react'
 
 export default function SearchPage() {
-  const navigate = new useNavigate()
-  const dispatch = new useDispatch()
-  const playState = useSelector((state) => state.play)
-
-  console.log(playState)
-
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const nav = useNavigationType()
   //隐藏tabBar
   useEffect(() => {
     dispatch(setBBar(false))
@@ -22,22 +20,61 @@ export default function SearchPage() {
     }
   }, [])
 
+  //输入框
   const [keywords, setKeywords] = useState()
   const changeHandle = (e) => {
     setKeywords(e)
   }
 
+  //音乐列表
   const [musicList, setMusicList] = useState([])
+  const [loading, setLoading] = useState(false)
+  const historyList = (localStorage.getItem('searchHistory') || '鸡你太美,你干嘛').split(',')
+  const [searchHistory, setSearchHistory] = useState(historyList)
 
-  const onEnterPress = () => {
-    axios.get(`cloudsearch?keywords=${keywords}&limit=15`).then((res) => {
+  //添加历史记录
+  const addHistory = (value) => {
+    const list = (localStorage.getItem('searchHistory') || '鸡你太美,你干嘛').split(',')
+
+    if (list.includes(value)) {
+      list.splice(list.indexOf(value), 1)
+    }
+    list.unshift(value)
+    list.splice(9, 99)
+    localStorage.setItem('searchHistory', list)
+    setSearchHistory(list)
+  }
+
+  //开始搜索
+  const onEnterPress = (value) => {
+    addHistory(value)
+    setLoading(true)
+    setMusicList([])
+    axios.get(`cloudsearch?keywords=${value}&limit=15`).then((res) => {
+      setLoading(false)
       setMusicList(res.result.songs)
     })
   }
 
+  //聚焦 失焦
+  const [isFocus, setIsFocus] = useState(false)
+
+  const inputRef = useRef()
+
+  useEffect(() => {
+    if (nav === 'POP') {
+      onEnterPress(searchHistory[0])
+      setKeywords(searchHistory[0])
+    }
+
+    if (nav === 'PUSH') {
+      inputRef.current.focus()
+    }
+  }, [])
+
+  //跳转
   const playHandle = (item) => {
-    dispatch(addOneMusic(item))
-    // navigate('/play/' + id)
+    navigate('/play/' + item.id)
   }
 
   return (
@@ -46,27 +83,65 @@ export default function SearchPage() {
         <div className="border rounded-full flex items-center pl-2 gap-1 flex-1">
           <Search theme="outline" size="16" fill="#999" />
           <Input
+            ref={inputRef}
             placeholder="请输入内容"
             clearable
-            onEnterPress={onEnterPress}
+            onEnterPress={function (event) {
+              this.onBlur()
+              onEnterPress(event.target.value)
+            }}
             value={keywords}
             onChange={changeHandle}
+            onFocus={() => setIsFocus(true)}
+            onBlur={() => setTimeout(() => setIsFocus(false), 0)}
           />
         </div>
-        <span className="pl-2">取消</span>
+
+        <span
+          className="pl-2"
+          onClick={() => {
+            navigate('/discover')
+          }}
+        >
+          取消
+        </span>
       </div>
 
-      <List className="mt-2 flex-1 overflow-auto">
-        {musicList.map((item) => (
-          <List.Item key={item.id} onClick={() => playHandle(item)}>
-            <div>{item.name}</div>
-            <div className="text-sm line-clamp-1">
-              {item.ar.map((a) => a.name).join('，')}
-              {item.alia[0] && ` - ${item.alia[0]}`}
-            </div>
-          </List.Item>
-        ))}
-      </List>
+      {isFocus && (
+        <div className="mt-2">
+          <p className="leading-6 text-sm">历史记录</p>
+          {searchHistory.map((a) => (
+            <Tag
+              fill="outline"
+              key={a}
+              className="mr-2 mb-1"
+              onClick={(event) => {
+                onEnterPress(event.target.textContent)
+                setKeywords(event.target.textContent)
+              }}
+            >
+              {a}
+            </Tag>
+          ))}
+        </div>
+      )}
+
+      {loading && <SpinLoading className="m-auto" />}
+      {musicList.length > 0 && !isFocus && (
+        <List className="mt-2 flex-1 overflow-auto">
+          {musicList.map((item) => (
+            <List.Item key={item.id} onClick={() => playHandle(item)}>
+              <div>
+                {item.name} {item.fee == 1 && <VipOne theme="outline" size="16" fill="#f00" />}
+              </div>
+              <div className="text-sm line-clamp-1">
+                {item.ar.map((a) => a.name).join('，')}
+                {item.alia[0] && ` - ${item.alia[0]}`}
+              </div>
+            </List.Item>
+          ))}
+        </List>
+      )}
     </div>
   )
 }

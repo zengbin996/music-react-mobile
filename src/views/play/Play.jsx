@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { setSrc, setDetail, setMusicState, setPattern } from '../../redux/playMusic'
-import { setBBar } from '../../redux/tabBar'
-import axios from 'axios'
 import { NavBar, ProgressBar } from 'antd-mobile'
 import { DownOutline, HeartFill, HeartOutline } from 'antd-mobile-icons'
 import { PlayCycle, PlayOnce, ShuffleOne, GoStart, Play, PauseOne, GoEnd, MusicList } from '@icon-park/react'
+import { startAsync, changePattern } from '../../redux/play'
+import { setBBar } from '../../redux/tabBar'
+import axios from 'axios'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 dayjs.extend(duration)
@@ -16,8 +16,6 @@ export default function Counter() {
   const { id } = new useParams()
   const dispatch = useDispatch()
 
-  const { musicDetail, musicState, musicPlayPattern, musicCurrentTime } = useSelector((state) => state.play)
-
   //隐藏tabBar
   useEffect(() => {
     dispatch(setBBar(false))
@@ -26,15 +24,11 @@ export default function Counter() {
     }
   }, [])
 
-  useEffect(() => {
-    axios.get('/song/url', { params: { id } }).then((res) => {
-      dispatch(setSrc(res.data[0].url))
-    })
+  const play = useSelector((state) => state.play)
 
-    axios.get('/song/detail', { params: { ids: id } }).then((res) => {
-      dispatch(setDetail(res.songs[0]))
-    })
-  }, [id])
+  useEffect(() => {
+    dispatch(startAsync(id))
+  }, [])
 
   const back = () => {
     navigate(-1)
@@ -48,16 +42,17 @@ export default function Counter() {
     }
     return 'px-2 cursor-pointer'
   }
+
   const clickNav = (index) => {
     setCurrentNav(index)
   }
 
-  if (!musicDetail.name) return null
+  if (!play.detail.name) return null
 
   return (
     <div
       className="h-full bg-no-repeat bg-cover"
-      style={{ backgroundImage: `url(${musicDetail.al.picUrl}?imageView=1&type=webp&thumbnail=750x750)` }}
+      style={{ backgroundImage: `url(${play.detail.al.picUrl}?imageView=1&type=webp&thumbnail=750x750)` }}
     >
       <div className="bg-black/50 backdrop-blur-xl h-full flex flex-col">
         <NavBar backArrow={<DownOutline color="rgba(255,255,255,0.9)" />} onBack={back}>
@@ -80,28 +75,28 @@ export default function Counter() {
 
         <div className="flex-1 px-6 text-white/90 flex flex-col justify-between">
           <img
-            src={`${musicDetail.al.picUrl}?imageView=1&type=webp&thumbnail=750x750`}
-            alt={musicDetail.name}
+            src={`${play.detail.al.picUrl}?imageView=1&type=webp&thumbnail=750x750`}
+            alt={play.detail.name}
             className="m-auto rounded-xl w-full"
           />
 
           <div className="flex-1 flex flex-col justify-between pb-16">
             <div className="py-8">
               <div className="flex justify-between">
-                <div className="text-xl">{musicDetail.name}</div>
+                <div className="text-xl">{play.detail.name}</div>
                 <div>
-                  <HeartFill fontSize={26} className="cursor-pointer" />
+                  <HeartFill fontSize={26} className="cursor-pointer" onClick={() => lick()} />
                   {/* <HeartOutline fontSize={26} /> */}
                 </div>
               </div>
-              <div className="text-sm py-2">{musicDetail.ar.map((item) => item.name).join('，')}</div>
+              <div className="text-sm py-2">{play.detail.ar.map((item) => item.name).join('，')}</div>
               <div>歌词</div>
             </div>
 
             <div>
               <div className="pb-6">
                 <ProgressBar
-                  percent={42}
+                  percent={(play.currentTime / play.detail.dt) * 100}
                   style={{
                     '--track-width': '2px',
                     '--fill-color': '#F1F5F9',
@@ -109,33 +104,33 @@ export default function Counter() {
                   }}
                 />
                 <div className="flex justify-between mt-2">
-                  <span>{dayjs.duration(musicCurrentTime).format('mm:ss')}</span>
-                  <span>{dayjs.duration(musicDetail.dt).format('mm:ss')}</span>
+                  <span>{dayjs.duration(play.currentTime).format('mm:ss')}</span>
+                  <span>{dayjs.duration(play.detail.dt).format('mm:ss')}</span>
                 </div>
               </div>
 
               <div className="flex justify-between items-center">
-                {musicPlayPattern === 0 && (
+                {play.pattern === 0 && (
                   <PlayCycle
-                    onClick={() => dispatch(setPattern())}
+                    onClick={() => dispatch(changePattern())}
                     theme="outline"
                     size="26"
                     fill="#F2F2F2"
                     className="cursor-pointer"
                   />
                 )}
-                {musicPlayPattern === 1 && (
+                {play.pattern === 1 && (
                   <ShuffleOne
-                    onClick={() => dispatch(setPattern())}
+                    onClick={() => dispatch(changePattern())}
                     theme="outline"
                     size="26"
                     fill="#F2F2F2"
                     className="cursor-pointer"
                   />
                 )}
-                {musicPlayPattern === 2 && (
+                {play.pattern === 2 && (
                   <PlayOnce
-                    onClick={() => dispatch(setPattern())}
+                    onClick={() => dispatch(changePattern())}
                     theme="outline"
                     size="26"
                     fill="#F2F2F2"
@@ -144,21 +139,22 @@ export default function Counter() {
                 )}
 
                 <GoStart theme="outline" size="36" fill="#F2F2F2" className="cursor-pointer" />
-                {musicState ? (
-                  <PauseOne
-                    theme="outline"
-                    size="56"
-                    fill="#F2F2F2"
-                    className="cursor-pointer"
-                    onClick={() => window.audioDom.pause()}
-                  />
-                ) : (
+
+                {play.paused ? (
                   <Play
                     theme="outline"
                     size="56"
                     fill="#F2F2F2"
                     className="cursor-pointer"
                     onClick={() => window.audioDom.play()}
+                  />
+                ) : (
+                  <PauseOne
+                    theme="outline"
+                    size="56"
+                    fill="#F2F2F2"
+                    className="cursor-pointer"
+                    onClick={() => window.audioDom.pause()}
                   />
                 )}
                 <GoEnd theme="outline" size="36" fill="#F2F2F2" className="cursor-pointer" />

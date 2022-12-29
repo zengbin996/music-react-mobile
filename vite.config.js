@@ -7,8 +7,8 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://42.192.137.99:3000",
-        // target: "http://127.0.0.1:3000",
+        // target: "https://musicapi-murex.vercel.app",
+        target: "http://127.0.0.1:9998",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },

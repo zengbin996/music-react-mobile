@@ -1,10 +1,10 @@
-import { configureStore } from '@reduxjs/toolkit';
-import playSlice from './playMusic';
-import tabBar from './tabBar';
+import { configureStore } from '@reduxjs/toolkit'
+import tabBar from './tabBar'
+import play from './play'
 
 export default configureStore({
   reducer: {
-    play: playSlice,
     tabBar,
+    play,
   },
-});
+})
