@@ -3,7 +3,7 @@ import { Input, List, Tag } from 'antd-mobile'
 import { useDispatch, useSelector } from 'react-redux'
 import { Search } from '@icon-park/react'
 import axios from 'axios'
-import { setBBar } from '../../../redux/tabBar'
+import { setBBar, setCBar } from '../../../redux/tabBar'
 import { useNavigate, useNavigationType } from 'react-router-dom'
 import { SpinLoading } from 'antd-mobile'
 import { VipOne } from '@icon-park/react'
@@ -15,8 +15,10 @@ export default function SearchPage() {
   //隐藏tabBar
   useEffect(() => {
     dispatch(setBBar(false))
+    // dispatch(setCBar(false))
     return () => {
       dispatch(setBBar(true))
+      // dispatch(setCBar(true))
     }
   }, [])
 
@@ -78,7 +80,7 @@ export default function SearchPage() {
   }
 
   return (
-    <div className="p-4 flex flex-col h-screen">
+    <div className="p-4 flex flex-col h-full">
       <div className="flex items-center">
         <div className="border rounded-full flex items-center pl-2 gap-1 flex-1">
           <Search theme="outline" size="16" fill="#999" />
@@ -92,8 +94,16 @@ export default function SearchPage() {
             }}
             value={keywords}
             onChange={changeHandle}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setTimeout(() => setIsFocus(false), 0)}
+            onFocus={() => {
+              setIsFocus(true)
+              dispatch(setCBar(false))
+            }}
+            onBlur={() =>
+              setTimeout(() => {
+                setIsFocus(false)
+                dispatch(setCBar(true))
+              }, 0)
+            }
           />
         </div>
 

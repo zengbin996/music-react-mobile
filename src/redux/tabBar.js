@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit'
 
 export const tabBarSlice = createSlice({
   name: 'tabBar',
@@ -9,13 +9,13 @@ export const tabBarSlice = createSlice({
 
   reducers: {
     setBBar: (state, action) => {
-      state.buttonBar = action.payload;
+      state.buttonBar = action.payload
     },
     setCBar: (state, action) => {
-      state.controlBar = action.payload;
+      state.controlBar = action.payload
     },
   },
-});
+})
 
-export const { setBBar, setCBar } = tabBarSlice.actions;
-export default tabBarSlice.reducer;
+export const { setBBar, setCBar } = tabBarSlice.actions
+export default tabBarSlice.reducer
