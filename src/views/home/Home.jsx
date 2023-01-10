@@ -25,11 +25,11 @@ export default function Home() {
       title: '发现',
       icon: <CompassOutline />,
     },
-    {
-      key: '/ranking',
-      title: '排行',
-      icon: <HistogramOutline />,
-    },
+    // {
+    //   key: '/ranking',
+    //   title: '排行',
+    //   icon: <HistogramOutline />,
+    // },
     {
       key: '/user',
       title: '我的',
@@ -113,6 +113,7 @@ export default function Home() {
           </div>
         )}
 
+        {/* 播放条 */}
         {buttonBar && (
           <TabBar className="h-12" onChange={(item) => changeTabBar(item)} activeKey={activeKey}>
             {tabs.map((item) => (

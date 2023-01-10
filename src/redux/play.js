@@ -46,6 +46,7 @@ export const playSlice = createSlice({
       state.paused = !action.payload
     },
 
+    //更新播放时间
     updateTime: (state, action) => {
       state.currentTime = action.payload
     },
@@ -69,6 +70,40 @@ export const playSlice = createSlice({
         }
       }
     },
+
+    //修改播放列表 action 参数 type 1替换 2插入
+    setList(state, action) {
+      if (action.payload.type === 1) {
+        state.list = action.payload.list
+        state.current = action.payload.index || 0
+      }
+
+      if (action.payload.type === 2) {
+        state.list.splice(state.current, 0, action.payload.list)
+      }
+    },
+
+    //下一首
+    nextOne(state) {
+      if (state.current === state.list.length - 1) {
+        state.current = 0
+      } else {
+        state.current += 1
+      }
+    },
+
+    //上一首
+    lastOne(state) {
+      if (state.current === 0) {
+        state.current = state.list.length
+      } else {
+        state.current -= 1
+      }
+    },
+
+    navIndex(state, action) {
+      state.current = action.payload
+    },
   },
 
   extraReducers(builder) {
@@ -80,5 +115,5 @@ export const playSlice = createSlice({
   },
 })
 
-export const { start, updateTime, changePattern } = playSlice.actions
+export const { start, updateTime, changePattern, setList, nextOne, lastOne, navIndex } = playSlice.actions
 export default playSlice.reducer

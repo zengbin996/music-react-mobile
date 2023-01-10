@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Search } from '@icon-park/react'
 import axios from 'axios'
 import { setBBar, setCBar } from '../../../redux/tabBar'
+import { setList, startAsync } from '../../../redux/play'
 import { useNavigate, useNavigationType } from 'react-router-dom'
 import { SpinLoading } from 'antd-mobile'
 import { VipOne } from '@icon-park/react'
@@ -12,6 +13,8 @@ export default function SearchPage() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const nav = useNavigationType()
+  const play = useSelector((state) => state.play)
+
   //隐藏tabBar
   useEffect(() => {
     dispatch(setBBar(false))
@@ -68,7 +71,6 @@ export default function SearchPage() {
       onEnterPress(searchHistory[0])
       setKeywords(searchHistory[0])
     }
-
     if (nav === 'PUSH') {
       inputRef.current.focus()
     }
@@ -76,7 +78,7 @@ export default function SearchPage() {
 
   //跳转
   const playHandle = (item) => {
-    navigate('/play/' + item.id)
+    dispatch(setList({ list: item, type: 2 }))
   }
 
   return (

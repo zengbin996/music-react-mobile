@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import { Swiper, Input } from 'antd-mobile'
 import { Search } from '@icon-park/react'
 import axios from 'axios'
 import _ from 'lodash'
+import { setList } from '../../../redux/play'
 
 export default function Discover() {
-  const navigate = new useNavigate()
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   // 轮播图
   const [banner, setBanner] = useState([])
@@ -62,7 +65,7 @@ export default function Discover() {
     })
   }, [])
   const playMusic = (item) => {
-    navigate('/play/' + item.id)
+    dispatch(setList({ list: item, type: 2 }))
   }
   const newSongItem = newSong.map((item, index) => {
     return (

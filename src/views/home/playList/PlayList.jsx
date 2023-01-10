@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { useDispatch } from 'react-redux'
 import { useParams, useNavigate } from 'react-router-dom'
 import { NavBar, List } from 'antd-mobile'
-
 import { Headset, Comment, Play, VipOne } from '@icon-park/react'
-
 import { setBBar } from '../../../redux/tabBar'
 import { setCBar } from '../../../redux/tabBar'
+import { setList, startAsync } from '../../../redux/play'
 import _ from 'lodash'
+import { useDispatch, useSelector } from 'react-redux'
 
 export default function PlayList() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { id } = useParams()
-
+  const play = useSelector((state) => state.play)
   //隐藏tabBar
   useEffect(() => {
     dispatch(setBBar(false))
@@ -29,8 +28,6 @@ export default function PlayList() {
   const getPlaylist = async () => {
     const result = await axios.get(`/playlist/detail?id=${id}`)
     setDetail(result.playlist)
-
-    console.log(result.playlist)
   }
 
   useEffect(() => {
@@ -42,12 +39,13 @@ export default function PlayList() {
   }
 
   const [barOpacity, setBarOpacity] = useState(0)
+
   const scrollHandle = _.throttle(function () {
     let opacity = 0
-    if (this.scrollTop > 237 || this.scrollTop == 237) {
+    if (this.scrollTop > 192 || this.scrollTop == 192) {
       opacity = 1
     } else {
-      opacity = this.scrollTop / 237
+      opacity = this.scrollTop / 192
     }
     setBarOpacity(opacity)
   }, 20)
@@ -61,6 +59,15 @@ export default function PlayList() {
       main.removeEventListener('scroll', scrollHandle)
     }
   }, [])
+
+  const playAll = () => {
+    dispatch(setList({ list: detail.tracks, type: 1 }))
+  }
+
+  const playMusic = (item) => {
+    const index = detail.tracks.findIndex((a) => a.id == item.id)
+    dispatch(setList({ list: detail.tracks, type: 1, index: index }))
+  }
 
   return (
     <div className="text-white">
@@ -100,8 +107,15 @@ export default function PlayList() {
         </div>
 
         <div className="text-black p-4">
-          <div className="text-base flex justify-between items-center">
-            <div className="text-lg flex items-center">
+          <div
+            className="text-base flex justify-between items-center bg-white"
+            style={
+              barOpacity === 1
+                ? { position: 'absolute', top: 45, left: 0, zIndex: 100, padding: '16px 8px', width: '100%' }
+                : {}
+            }
+          >
+            <div className="text-lg flex items-center" onClick={playAll}>
               <span>全部播放</span>
               <Play theme="outline" size="24" fill="#333" className="ml-1" />
             </div>
@@ -120,7 +134,7 @@ export default function PlayList() {
           {detail.tracks && detail.tracks.length > 0 && (
             <List className="mt-2 flex-1 overflow-auto">
               {detail.tracks.map((item) => (
-                <List.Item key={item.id} onClick={() => navigate('/play/' + item.id)}>
+                <List.Item key={item.id} onClick={() => playMusic(item)}>
                   <div>
                     {item.name} {item.fee == 1 && <VipOne theme="outline" size="16" fill="#f00" />}
                   </div>

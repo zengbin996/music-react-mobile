@@ -1,10 +1,21 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { NavBar, ProgressBar, Swiper } from 'antd-mobile'
+import { NavBar, ProgressBar, Swiper, Popup, List } from 'antd-mobile'
 import { DownOutline, HeartFill, HeartOutline } from 'antd-mobile-icons'
-import { PlayCycle, PlayOnce, ShuffleOne, GoStart, Play, PauseOne, GoEnd, MusicList, Comment } from '@icon-park/react'
-import { startAsync, changePattern } from '../../redux/play'
+import {
+  PlayCycle,
+  PlayOnce,
+  ShuffleOne,
+  GoStart,
+  Play,
+  PauseOne,
+  GoEnd,
+  MusicList,
+  Comment,
+  VipOne,
+} from '@icon-park/react'
+import { startAsync, changePattern, nextOne, lastOne, navIndex, setList } from '../../redux/play'
 import { setBBar, setCBar } from '../../redux/tabBar'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
@@ -26,8 +37,11 @@ export default function Counter() {
   }, [])
 
   const play = useSelector((state) => state.play)
+
   useEffect(() => {
-    dispatch(startAsync(id))
+    if (!play.list.length) {
+      dispatch(setList({ list: { id }, type: 2 }))
+    }
   }, [])
 
   const back = () => {
@@ -90,6 +104,23 @@ export default function Counter() {
     if (current) setLyric(current.txt)
     setLyricList(list)
   }, [play.currentTime])
+
+  //切换歌曲
+
+  const goNav = (index) => {
+    if (index === 1) {
+      dispatch(nextOne())
+    } else {
+      dispatch(lastOne())
+    }
+  }
+
+  //播放列表
+  const [popupVisible, setPopupVisible] = useState(false)
+  const playMusicHandle = (item) => {
+    const current = play.list.findIndex((a) => a.id === item.id)
+    dispatch(navIndex(current))
+  }
 
   if (!play.detail.name) return null
 
@@ -196,7 +227,13 @@ export default function Counter() {
                       />
                     )}
 
-                    <GoStart theme="outline" size="36" fill="#F2F2F2" className="cursor-pointer" />
+                    <GoStart
+                      theme="outline"
+                      size="36"
+                      fill="#F2F2F2"
+                      className="cursor-pointer"
+                      onClick={() => goNav(-1)}
+                    />
 
                     {play.paused ? (
                       <Play
@@ -215,9 +252,21 @@ export default function Counter() {
                         onClick={() => window.audioDom.pause()}
                       />
                     )}
-                    <GoEnd theme="outline" size="36" fill="#F2F2F2" className="cursor-pointer" />
+                    <GoEnd
+                      theme="outline"
+                      size="36"
+                      fill="#F2F2F2"
+                      className="cursor-pointer"
+                      onClick={() => goNav(1)}
+                    />
 
-                    <MusicList theme="outline" size="22" fill="#F2F2F2" className="cursor-pointer" />
+                    <MusicList
+                      onClick={() => setPopupVisible(true)}
+                      theme="outline"
+                      size="22"
+                      fill="#F2F2F2"
+                      className="cursor-pointer"
+                    />
                   </div>
                 </div>
               </div>
@@ -231,6 +280,33 @@ export default function Counter() {
             </div>
           </Swiper.Item>
         </Swiper>
+
+        <Popup
+          visible={popupVisible}
+          onMaskClick={() => {
+            setPopupVisible(false)
+          }}
+          bodyStyle={{ height: '80vh' }}
+          position="bottom"
+        >
+          <List header="播放列表" className="overflow-auto h-full">
+            {play.list[0].name &&
+              play.list.map((item) => (
+                <List.Item key={item.id} onClick={() => playMusicHandle(item)}>
+                  <div className={play.list[play.current].id == item.id ? 'text-red-500' : ''}>
+                    <div>
+                      {item.name} {item.fee == 1 && <VipOne theme="outline" size="16" fill="#f00" />}
+                    </div>
+                    <div className="text-sm line-clamp-1">
+                      {item.ar.map((a) => a.name).join('，')}
+                      {item.alia[0] && ` - ${item.alia[0]}`}
+                    </div>
+                  </div>
+                </List.Item>
+              ))}
+            ;
+          </List>
+        </Popup>
       </div>
     </div>
   )
