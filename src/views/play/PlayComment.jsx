@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { setBBar, setCBar } from '../../redux/tabBar'
 import { NavBar, List } from 'antd-mobile'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import axios from 'axios'
 
 export default function PlayComment() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { id } = useParams()
+  let [searchParams, setSearchParams] = useSearchParams()
 
   //隐藏tabBar
   useEffect(() => {
@@ -27,7 +28,13 @@ export default function PlayComment() {
   const [commentListHot, setCommentListHot] = useState([])
 
   const getCommentList = async () => {
-    const result = await axios.get(`/comment/music?id=${id}&limit=50`)
+    let result = null
+
+    if (searchParams.get('type') === 'playList') {
+      result = await axios.get(`/comment/playlist?id=${id}&limit=50`)
+    } else {
+      result = await axios.get(`/comment/music?id=${id}&limit=50`)
+    }
     setCommentList(result.comments)
     setCommentListHot(result.hotComments)
   }

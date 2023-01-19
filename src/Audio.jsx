@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useCallback } from 'react'
 import IndexRouter from './router/IndexRouter'
 import { useSelector, useDispatch } from 'react-redux'
 import _ from 'lodash'
@@ -15,13 +15,12 @@ export default function Audio() {
     }
   }, [play.list, play.current])
 
-  const durationChange = (e) => {
-    dispatch(updateTime(e.target.currentTime * 1000))
-  }
-
+  //播放
   const playHandle = () => {
     dispatch(start(true))
   }
+
+  //暂停
   const pauseHandle = () => {
     dispatch(start(false))
   }
@@ -40,6 +39,14 @@ export default function Audio() {
     dispatch(startAsync(play.list[play.current].id))
   }
 
+  //播放时间变化
+  const durationChange = useCallback(
+    _.throttle((e) => {
+      dispatch(updateTime(e.target.currentTime * 1000))
+    }, 300),
+    []
+  )
+
   return (
     <div className="h-full">
       <audio
@@ -49,8 +56,8 @@ export default function Audio() {
         src={play.src.url}
         onPlay={playHandle}
         onPause={pauseHandle}
-        onTimeUpdate={_.throttle(durationChange, 500)}
         onEnded={endedHandle}
+        onTimeUpdate={durationChange}
       ></audio>
       <IndexRouter />
     </div>

@@ -21,7 +21,6 @@ export default function PlayList() {
       dispatch(setBBar(true))
     }
   }, [])
-
   //获取歌单内容
   const [detail, setDetail] = useState({})
 
@@ -125,7 +124,7 @@ export default function PlayList() {
               {detail.playCount}
             </div>
 
-            <div>
+            <div onClick={() => navigate(`/play/comment/${id}?type=playList`)}>
               <Comment className="mr-1" theme="outline" size="16" fill="#333" />
               {detail.commentCount}
             </div>

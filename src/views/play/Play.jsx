@@ -106,7 +106,6 @@ export default function Counter() {
   }, [play.currentTime])
 
   //切换歌曲
-
   const goNav = (index) => {
     if (index === 1) {
       dispatch(nextOne())
@@ -298,8 +297,9 @@ export default function Counter() {
                       {item.name} {item.fee == 1 && <VipOne theme="outline" size="16" fill="#f00" />}
                     </div>
                     <div className="text-sm line-clamp-1">
-                      {item.ar.map((a) => a.name).join('，')}
-                      {item.alia[0] && ` - ${item.alia[0]}`}
+                      {/* {console.log(item)} */}
+                      {/* {item.ar.map((a) => a.name).join('，')} */}
+                      {/* {item.alia[0] && ` - ${item.alia[0]}`} */}
                     </div>
                   </div>
                 </List.Item>

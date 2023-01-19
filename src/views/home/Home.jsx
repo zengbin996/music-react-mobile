@@ -12,10 +12,11 @@ import Search from './search/Search'
 import Play from '../../views/play/Play'
 import PlayComment from '../play/PlayComment'
 import PlayList from './playList/PlayList'
+import Artist from './artist/Artist'
 
 export default function Home() {
-  const navigate = new useNavigate()
-  const location = new useLocation()
+  const navigate = useNavigate()
+  const location = useLocation()
   const { buttonBar, controlBar } = useSelector((state) => state.tabBar)
   const play = useSelector((state) => state.play)
 
@@ -59,6 +60,7 @@ export default function Home() {
           <Route path="/playlist/:id" element={<PlayList />} />
           <Route path="/play/:id" element={<Play />} />
           <Route path="/play/comment/:id" element={<PlayComment />} />
+          <Route path="/artist/:id" element={<Artist />} />
           <Route path="/" element={<Navigate to="/discover" />} />
         </Routes>
       </div>

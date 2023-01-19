@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Swiper, Input } from 'antd-mobile'
 import { Search } from '@icon-park/react'
 import axios from 'axios'
@@ -10,6 +10,8 @@ import { setList } from '../../../redux/play'
 export default function Discover() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+
+  const play = useSelector((state) => state.play)
 
   // 轮播图
   const [banner, setBanner] = useState([])
@@ -64,8 +66,9 @@ export default function Discover() {
       setNewSong(_.chunk(res.result, 3))
     })
   }, [])
+
   const playMusic = (item) => {
-    dispatch(setList({ list: item, type: 2 }))
+    dispatch(setList({ list: { id: item.id }, type: 2 }))
   }
   const newSongItem = newSong.map((item, index) => {
     return (
@@ -131,7 +134,7 @@ export default function Discover() {
 
   const artistsDom = artists.map((item) => {
     return (
-      <div key={item.id} className="w-24 flex-none">
+      <div key={item.id} className="w-24 flex-none" onClick={() => navigate(`/artist/${item.id}`)}>
         <img
           src={item.picUrl + '?imageView=1&type=webp&thumbnail=182x0'}
           alt={item.name}
