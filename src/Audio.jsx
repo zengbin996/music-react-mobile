@@ -48,7 +48,7 @@ export default function Audio() {
   )
 
   return (
-    <div className="h-full">
+    <div className="h-full max-w-3xl m-auto">
       <audio
         autoPlay
         id="audioDom"
