@@ -56,7 +56,7 @@ export default function Audio() {
         src={play.src.url}
         onPlay={playHandle}
         onPause={pauseHandle}
-        onEnded={endedHandle}
+        onEnded={() => endedHandle(1)}
         onTimeUpdate={durationChange}
       ></audio>
       <IndexRouter />

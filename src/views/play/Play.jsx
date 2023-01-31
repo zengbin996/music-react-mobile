@@ -40,6 +40,7 @@ export default function Counter() {
 
   useEffect(() => {
     if (!play.list.length) {
+      dispatch()
       dispatch(setList({ list: { id }, type: 2 }))
     }
   }, [])
@@ -154,7 +155,9 @@ export default function Counter() {
           defaultIndex={1}
           className="flex-1 text-white"
         >
-          <Swiper.Item>歌曲相关</Swiper.Item>
+          <Swiper.Item>
+            <div className='p-4'>暂无推荐</div>
+          </Swiper.Item>
           <Swiper.Item>
             <div className="h-full px-6 text-white/90 flex flex-col justify-between">
               <img

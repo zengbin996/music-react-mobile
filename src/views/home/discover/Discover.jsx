@@ -192,9 +192,9 @@ export default function Discover() {
       <div className="px-4 py-2 pt-4 text-lg">专属歌单</div>
       <div className="px-4 flex gap-2 text-sm overflow-auto">{highQualityDom}</div>
       <div className="px-4 py-2 pt-4 text-lg">热门歌手</div>
-      <div className="px-4 flex gap-2 text-sm overflow-auto">{artistsDom}</div>
-      <div className="px-4 py-2 pt-4 text-lg">最新MV</div>
-      <div className="px-4 flex gap-2 text-sm overflow-auto">{musicVideoDom}</div>
+      <div className="px-4 flex gap-2 text-sm overflow-auto mb-6">{artistsDom}</div>
+      {/* <div className="px-4 py-2 pt-4 text-lg">最新MV</div>
+      <div className="px-4 flex gap-2 text-sm overflow-auto">{musicVideoDom}</div> */}
     </>
   )
 }

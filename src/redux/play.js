@@ -95,7 +95,7 @@ export const playSlice = createSlice({
     //上一首
     lastOne(state) {
       if (state.current === 0) {
-        state.current = state.list.length
+        state.current = state.list.length - 1
       } else {
         state.current -= 1
       }

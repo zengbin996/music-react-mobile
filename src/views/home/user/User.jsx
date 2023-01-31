@@ -57,9 +57,9 @@ export default () => {
 
   //获取登录状态
   useEffect(() => {
-    // axios.get(`/login/status`).then((res) => {
-    //   console.log(res)
-    // })
+    axios.get(`/login/status`).then((res) => {
+      console.log(res)
+    })
   }, [])
   return (
     <div className="pt-2">
