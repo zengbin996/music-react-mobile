@@ -6,6 +6,8 @@ import { visualizer } from 'rollup-plugin-visualizer'
 export default defineConfig({
   plugins: [
     react(),
+
+    // 静态资源cdn替换
     importToCDN.Plugin({
       modules: [
         {
@@ -61,13 +63,16 @@ export default defineConfig({
         },
       ],
     }),
+
+    //打包分析工具
     visualizer({
-      open: true, //注意这里要设置为true，否则无效
+      open: false, //注意这里要设置为true，否则无效
       gzipSize: true,
       brotliSize: true,
     }),
   ],
   server: {
+    //代理
     // proxy: {
     //   '/api': {
     //     // target: "https://musicapi-murex.vercel.app",
