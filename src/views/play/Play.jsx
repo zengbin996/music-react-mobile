@@ -40,7 +40,6 @@ export default function Counter() {
 
   useEffect(() => {
     if (!play.list.length) {
-      dispatch()
       dispatch(setList({ list: { id }, type: 2 }))
     }
   }, [])
@@ -156,7 +155,7 @@ export default function Counter() {
           className="flex-1 text-white"
         >
           <Swiper.Item>
-            <div className='p-4'>暂无推荐</div>
+            <div className="p-4">暂无推荐</div>
           </Swiper.Item>
           <Swiper.Item>
             <div className="h-full px-6 text-white/90 flex flex-col justify-between">
@@ -300,7 +299,6 @@ export default function Counter() {
                       {item.name} {item.fee == 1 && <VipOne theme="outline" size="16" fill="#f00" />}
                     </div>
                     <div className="text-sm line-clamp-1">
-                      {/* {console.log(item)} */}
                       {/* {item.ar.map((a) => a.name).join('，')} */}
                       {/* {item.alia[0] && ` - ${item.alia[0]}`} */}
                     </div>

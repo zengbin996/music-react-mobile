@@ -6,12 +6,11 @@ import Audio from './Audio'
 import '@icon-park/react/styles/index.css'
 
 export default function App() {
-  if (document.body.clientWidth > 800) {
-    alert('当前为移动端项目,建议使用移动设备访问或者打开浏览器手机模拟器')
-  }
-  
   return (
     <Provider store={store}>
+      <div className="text-center hidden md:block">
+        <a href="//116.204.127.62:9002">当前为移动端项目，点击跳转PC项目</a>
+      </div>
       <Audio />
     </Provider>
   )

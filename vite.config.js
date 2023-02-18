@@ -29,13 +29,13 @@ export default defineConfig({
         // {
         //   name: 'react-router',
         //   var: 'ReactRouter',
-        //   path: `https://cdn.staticfile.org/react-router/6.6.2/react-router.development.js`,
+        //   path: `https://cdn.bootcdn.net/ajax/libs/react-router/6.8.1/react-router.production.min.js`,
         // },
 
         // {
         //   name: 'react-router-dom',
         //   var: 'ReactRouterDOM',
-        //   path: `https://cdn.staticfile.org/react-router-dom/6.6.2/react-router-dom.development.js`,
+        //   path: `https://cdn.bootcdn.net/ajax/libs/react-router-dom/6.8.1/react-router-dom.production.min.js`,
         // },
 
         {
@@ -72,15 +72,15 @@ export default defineConfig({
     }),
   ],
   server: {
+    port: '9001',
+
     //代理
-    // proxy: {
-    //   '/api': {
-    //     // target: "https://musicapi-murex.vercel.app",
-    //     target: 'http://127.0.0.1:9998',
-    //     // target: 'http://43.137.43.190:3000',
-    //     changeOrigin: true,
-    //     rewrite: (path) => path.replace(/^\/api/, ''),
-    //   },
-    // },
+    proxy: {
+      '/api': {
+        target: 'http://116.204.127.62:3000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
   },
 })

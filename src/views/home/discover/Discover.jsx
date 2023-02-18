@@ -36,7 +36,7 @@ export default function Discover() {
     })
   }, [])
   const ballHandle = (item) => {
-    console.log(item)
+    // console.log(item)
   }
   const ball = ballList.map((item, index) => (
     <div
